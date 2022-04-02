@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Saymon-Ahammad/SP_Project#readme",
   "dependencies": {
+    "express": "^4.17.3",
     "lodash": "^4.17.21"
   }
 }
