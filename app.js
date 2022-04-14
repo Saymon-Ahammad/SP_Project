@@ -1,33 +1,49 @@
-const express = require('express');
+ const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
+const Blog = require('./models/blog');
+const result = require('lodash');
 
 // express app
 const app = express();
 
+//connect to mongodb
+const dbURI = 'mongodb+srv://netninja:test1234@nodetuts.xoo5n.mongodb.net/node-tuts?retryWrites=true&w=majority'
+mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
+ .then((result) => app.listen(3000))
+ .catch((err) => console.log(err));
+
+
+
 //register view engine
 app.set('view engine', 'ejs');
 
-// listen for requests
-app.listen(3000);
 
 //middleware & static files
-app.use(express.static('public'));
+app.use('/public', express.static('public'));
 app.use(morgan('dev'));
 
+
+//routes
 app.get('/' , (req, res) => {
-    const blogs = [
-        {title: 'Saymon finds eggs', snippet: 'Then he makes dim vajii'},
-        {title: 'Mario finds stars', snippet: 'He started to count them'},
-        {title: 'How to defeat Bowser', snippet: 'I know but I wont tell you how to do so!'},
-    ];
-    //res.send('<p>Home Page</p>');
-    res.render('index', { title: 'Home', blogs});
+    res.redirect('/blogs');
 });
 
 
 app.get('/about' , (req, res) => {
     //res.send('<p>About Page</p>');
     res.render('about', { title: 'About Us'});
+});
+
+// blog routes
+app.get('/blogs', (req, res) => {
+  Blog.find()
+   .then((result) => {
+     res.render('index', {title: 'All Blogs', blogs: result});
+   })
+   .catch((err) => {
+     console.log(err);
+   });
 });
 
 app.get('/blogs/create', (req, res) => {
@@ -37,4 +53,5 @@ app.get('/blogs/create', (req, res) => {
 // 404 page
 app.use((req, res) => {
     res.status(404).render('404', { title: '404'});
-});
+}); 
+

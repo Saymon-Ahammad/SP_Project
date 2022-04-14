@@ -83,4 +83,8 @@
           font-size: 1.2em;
           cursor: pointer;
         }
+        .label{
+          color:#777;
+          
+        }
       </style>
